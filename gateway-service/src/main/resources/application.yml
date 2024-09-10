@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+cloud:
+  eureka-host: localhost
+  processing-service-url: http://localhost:8090
+  currency-service-url: http://localhost:8085
+  auth-service-url: http://localhost:9000
+  history-service-url: http://localhost:8010
+
+spring:
+  application:
+    name: api-gateway-service
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: currency-rate-service
+          uri: ${cloud.currency-service-url}
+          predicates:
+            - Path=/currency/**
+        - id: exchange-processing-service
+          uri: ${cloud.processing-service-url}
+          predicates:
+            - Path=/processing/**
+        - id: auth-service
+          uri: ${cloud.auth-service-url}
+          predicates:
+            - Path=/oauth/**, /user/**
+        - id: account-history-service
+          uri: ${cloud.history-service-url}
+          predicates:
+            - Path=/history/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${cloud.eureka-host}:8761/eureka

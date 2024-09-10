@@ -1,0 +1,15 @@
+.events-container {
+    max-width: 600px;
+    margin: 20px auto 0;
+}
+
+.history-page-header {
+    border: 1px solid rgb(235, 237, 240);
+}
+
+.no-events-found {
+    font-size: 20px;
+    text-align: center;
+    padding: 20px;
+    width: 600px;
+}

@@ -1,0 +1,10 @@
+.accounts-container {
+    max-width: 600px;
+    margin: 20px auto 0;
+}
+
+.no-accounts-found {
+    font-size: 20px;
+    text-align: center;
+    padding: 20px;
+}

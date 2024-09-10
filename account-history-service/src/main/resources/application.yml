@@ -1,0 +1,54 @@
+server:
+  port: 8010
+
+cloud:
+  db-host: localhost
+  kafka-host: localhost
+  eureka-host: localhost
+  auth-token-url: http://localhost:9000/oauth/check_token
+  user-info-url: http://localhost:9000/user
+
+spring:
+  application:
+    name: account-history-service
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://${cloud.db-host}:5432/account-history
+    username: postgres
+    password: masterkey
+    driverClassName: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db
+    url: jdbc:postgresql://${cloud.db-host}:5432/account-history
+    user: postgres
+    password: masterkey
+
+  kafka:
+    consumer:
+      bootstrap-servers: ${cloud.kafka-host}:9092
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: ${spring.application.name}-group
+      auto-offset-reset: earliest
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${cloud.eureka-host}:8761/eureka
+
+security:
+  oauth2:
+    resource:
+      token-info-uri: ${cloud.auth-token-url}
+      user-info-uri: ${cloud.user-info-url}
+    client:
+      client-id: history
+      client-secret: history123

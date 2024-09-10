@@ -1,0 +1,61 @@
+server:
+  port: 8090
+
+cloud:
+  db-host: localhost
+  eureka-host: localhost
+  kafka-host: localhost
+  currency-url: http://localhost:8080
+  auth-token-url: http://localhost:9000/oauth/check_token
+  user-info-url: http://localhost:9000/user
+
+spring:
+  application:
+    name: exchange-processing-service
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://${cloud.db-host}:5432/processing
+    username: postgres
+    password: masterkey
+    driverClassName: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db
+    url: jdbc:postgresql://${cloud.db-host}:5432/processing
+    user: postgres
+    password: masterkey
+
+  kafka:
+    producer:
+      bootstrap-servers: ${cloud.kafka-host}:9092
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+service:
+  currency:
+    url: ${cloud.currency-url}
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${cloud.eureka-host}:8761/eureka
+
+security:
+  oauth2:
+    resource:
+      token-info-uri: ${cloud.auth-token-url}
+      user-info-uri: ${cloud.user-info-url}
+    client:
+      client-id: processing
+      client-secret: processing123
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
